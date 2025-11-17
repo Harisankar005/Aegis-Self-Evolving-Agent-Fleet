@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+langchain
+rich
+pytest
+opentelemetry-sdk
+opentelemetry-exporter-console
+numpy
+pandas

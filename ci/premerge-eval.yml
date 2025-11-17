@@ -1,0 +1,34 @@
+name: Premerge Evaluation
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-and-evaluate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: |
+          pytest -q
+
+      - name: Run golden evaluation
+        run: |
+          python ci/run_golden_eval.py --gold tests/golden_dataset.json --out ci/metrics.json
+
+      - name: Check metrics and fail if regression
+        run: |
+          python ci/check_metrics.py --file ci/metrics.json --threshold 0.75

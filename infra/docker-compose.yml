@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  aegis-orchestrator:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    container_name: aegis-orchestrator
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./env.example
+    volumes:
+      - ../:/app
+    restart: unless-stopped
+
+  aegis-memory:
+    image: redis:alpine
+    container_name: aegis-memory
+    ports:
+      - "6379:6379"
+    restart: unless-stopped

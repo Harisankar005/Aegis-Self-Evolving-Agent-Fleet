@@ -1,0 +1,18 @@
+[
+  {
+    "mission": "Create a landing page for a new smartwatch for students",
+    "expected_steps": ["research", "copy", "webdev"]
+  },
+  {
+    "mission": "Generate a campaign for a fitness app in India",
+    "expected_steps": ["research", "copy", "webdev"]
+  },
+  {
+    "mission": "Summarize competitors for a new food delivery startup",
+    "expected_steps": ["research"]
+  },
+  {
+    "mission": "Create marketing copy for a new AI laptop",
+    "expected_steps": ["research", "copy"]
+  }
+]

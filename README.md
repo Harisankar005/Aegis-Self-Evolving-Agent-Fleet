@@ -54,7 +54,7 @@ See `/docs/design.md` for complete:
 - MCP-style tool registry  
 - Sessions & MemoryBank  
 - OpenTelemetry traces  
-- GitHub Actions CI/CD  
+- GitHub Actions CI/CD
 
 ---
 

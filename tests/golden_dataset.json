@@ -1,18 +1,78 @@
 [
   {
-    "mission": "Create a landing page for a new smartwatch for students",
-    "expected_steps": ["research", "copy", "webdev"]
+    "id": 1,
+    "mission": "Create a landing page for a new smartwatch designed for college students.",
+    "expected": {
+      "research": "Competitor insights and audience analysis.",
+      "copy": "Landing page headline and subheading.",
+      "web": "HTML landing page structure."
+    }
   },
   {
-    "mission": "Generate a campaign for a fitness app in India",
-    "expected_steps": ["research", "copy", "webdev"]
+    "id": 2,
+    "mission": "Generate a complete marketing campaign for a fitness mobile app targeting young professionals in India.",
+    "expected": {
+      "research": "Market trends and competitor breakdown.",
+      "copy": "Ad copy and promotional content.",
+      "web": "Basic promotional page or structure."
+    }
   },
   {
-    "mission": "Summarize competitors for a new food delivery startup",
-    "expected_steps": ["research"]
+    "id": 3,
+    "mission": "Produce a short analysis of competitors for a new food delivery startup in Bangalore.",
+    "expected": {
+      "research": "Competitor names and summary analysis."
+    }
   },
   {
-    "mission": "Create marketing copy for a new AI laptop",
-    "expected_steps": ["research", "copy"]
+    "id": 4,
+    "mission": "Write promotional content for the launch of an eco-friendly water bottle.",
+    "expected": {
+      "copy": "Marketing headline, description, and value proposition."
+    }
+  },
+  {
+    "id": 5,
+    "mission": "Summarize user pain points for students looking for budget laptops.",
+    "expected": {
+      "research": "User concerns, purchasing trends, and pricing considerations."
+    }
+  },
+  {
+    "id": 6,
+    "mission": "Draft a product launch announcement for a new productivity app.",
+    "expected": {
+      "copy": "Announcement paragraph and feature highlights."
+    }
+  },
+  {
+    "id": 7,
+    "mission": "Generate blog content ideas for a brand that sells ergonomic chairs.",
+    "expected": {
+      "research": "Audience segments and ergonomic trends.",
+      "copy": "3–5 blog post ideas."
+    }
+  },
+  {
+    "id": 8,
+    "mission": "Create a competitor comparison table for a digital payment service.",
+    "expected": {
+      "research": "Competitor list and key differentiators."
+    }
+  },
+  {
+    "id": 9,
+    "mission": "Develop copy and structure for a simple homepage advertising an online coding bootcamp.",
+    "expected": {
+      "copy": "Homepage headline and description.",
+      "web": "Basic layout or HTML snippet."
+    }
+  },
+  {
+    "id": 10,
+    "mission": "Provide an overview of recent social media trends relevant to skincare brands.",
+    "expected": {
+      "research": "Trend summary and platform-specific insights."
+    }
   }
 ]

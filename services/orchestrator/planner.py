@@ -1,30 +1,48 @@
-"""
-planner.py
-Creates a simple plan (sequence of steps) from a mission description.
-This is a simplified version of a planner agent.
-"""
+import json
+from services.tools.gemini_client import GeminiClient
 
-def generate_plan(mission_text: str):
+class Planner:
     """
-    Generate a 3-step mission plan for our marketing campaign example.
-    Later, this can be replaced with an LLM-based planner.
+    Planner generates a structured multi-agent plan for a mission using Gemini.
+    The output must be a list of steps, each containing:
+      - step (string)
+      - agent (string)
+      - args (dict)
+    """
 
-    Returns a list of steps. Each step maps to an agent in the registry.
-    """
-    return [
-        {
-            "step": "market_research",
-            "agent": "MarketResearchAgent",
-            "args": {"query": mission_text}
-        },
-        {
-            "step": "copywriting",
-            "agent": "CopyAgent",
-            "args": {"brief": mission_text}
-        },
-        {
-            "step": "deployment",
-            "agent": "WebDevAgent",
-            "args": {"brief": mission_text}
-        }
-    ]
+    def __init__(self):
+        self.llm = GeminiClient()
+
+    def generate_plan(self, mission_text: str):
+        """
+        Generate a JSON execution plan for the orchestrator.
+        """
+
+        prompt = f"""
+        You are an agent planner. Break the mission into 3–5 ordered steps.
+        Use only these agents:
+          - MarketResearchAgent
+          - CopyAgent
+          - WebDevAgent
+
+        Mission:
+        "{mission_text}"
+
+        Return ONLY valid JSON in this exact Python list format:
+        [
+          {{"step": "...", "agent": "...", "args": {{"key":"value"}}}},
+          ...
+        ]
+        """
+
+        response = self.llm.generate(prompt)
+
+        try:
+            plan = json.loads(response)
+        except Exception:
+            raise ValueError(f"Invalid JSON plan generated: {response}")
+
+        if not isinstance(plan, list):
+            raise ValueError("Planner output must be a list.")
+
+        return plan

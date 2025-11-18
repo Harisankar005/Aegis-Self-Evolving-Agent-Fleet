@@ -1,30 +1,34 @@
+from typing import Dict, Any
+from services.tools.gemini_client import GeminiClient
+
 class WebDevAgent:
-    """
-    Agent: WebDevAgent
-    Purpose: Produce simple HTML landing pages or assets for campaigns.
-    """
+    name = "WebDevAgent"
+    description = "Generates simple HTML landing pages from a brief."
 
     def __init__(self):
-        self.name = "WebDevAgent"
-        self.description = "Builds simple landing pages or HTML mockups."
+        self.llm = GeminiClient()
 
-    def call(self, args, session):
-        brief = args.get("brief", "Product")
+    def call(self, args: Dict[str, Any], session: Any) -> Dict[str, Any]:
+        brief = args.get("brief", "")
 
-        html = f"""
-        <html>
-            <head><title>{brief} - Landing Page</title></head>
-            <body>
-                <h1>Welcome to {brief}</h1>
-                <p>Your next generation solution for speed and simplicity.</p>
-            </body>
-        </html>
-        """
+        prompt = (
+            "Generate clean, responsive HTML for a landing page based on the following brief:\n"
+            f"{brief}\n\n"
+            "The layout should include a headline, subheadline, features section, and call-to-action button. "
+            "Return only HTML code without explanations."
+        )
 
-        artifact = {
-            "url": "https://example.com/generated-landing-page",
-            "html": html.strip()
+        html_output = self.llm.generate(prompt)
+
+        result = {
+            "agent": self.name,
+            "output": {
+                "html": html_output,
+                "meta": {
+                    "length": len(html_output),
+                    "summary": "Landing page HTML generated."
+                }
+            }
         }
 
-        session.append_event(self.name, artifact)
-        return artifact
+        return result

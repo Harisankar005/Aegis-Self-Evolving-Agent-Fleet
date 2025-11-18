@@ -1,74 +1,67 @@
-"""
-orchestrator.py
-Main orchestrator that runs the multi-agent workflow.
-"""
-
-from services.orchestrator.planner import generate_plan
-from services.tools.mcp_gateway import MCPRegistry
+from services.orchestrator.planner import Planner
+from services.tools.mcp_registry import MCPRegistry
 from services.memory.session_service import SessionService
+from evaluation.judge import Judge
 from services.agents.agent_creator import AgentCreator
-from services.evaluation.judge import Judge
-from services.orchestrator.tracing import TRACE
 
 
 class Orchestrator:
+    """
+    Coordinates mission execution:
+    1. Uses Planner to break mission into steps.
+    2. Executes each step with the appropriate agent from the registry.
+    3. Stores execution details in SessionService.
+    4. Scores the output via Judge.
+    5. Triggers AgentCreator to fill capability gaps when needed.
+    """
+
     def __init__(self):
-        self.sessions = SessionService()
         self.registry = MCPRegistry()
+        self.sessions = SessionService()
+        self.planner = Planner()
         self.judge = Judge()
         self.creator = AgentCreator(self.registry)
 
-    def run_mission(self, mission_text: str, session_id=None):
+    def register_agent(self, name: str, agent_impl, description: str = ""):
         """
-        Orchestrates an entire mission.
+        Register an agent into the MCP registry.
+        Each agent implementation must expose a `.call(args, session)` method.
+        """
+        self.registry.register(name, agent_impl, description)
 
-        Steps:
-        1. Create/restore session
-        2. Generate mission plan
-        3. Loop through steps → call agents
-        4. Record traces + memory
-        5. Run judge evaluation
-        6. Self-evolve if needed
+    def run_mission(self, mission: str, session_id: str = None) -> dict:
         """
-        # Load or create session
+        Run a full mission end-to-end:
+        - Generate plan
+        - Execute each agent step
+        - Record events in a session
+        - Evaluate using the judge
+        - Auto-create agents on low score
+        """
         session = self.sessions.get_or_create(session_id)
 
-        # Build plan
-        plan = generate_plan(mission_text)
+        plan = self.planner.generate_plan(mission)
         results = {}
 
         for step in plan:
             agent_name = step["agent"]
-            args = step["args"]
+            agent = self.registry.get(agent_name)
+            output = agent.call(step.get("args", {}), session)
 
-            # Start trace
-            span = TRACE.start(f"agent_call:{agent_name}", {"args": args})
-
-            # Call agent from MCP registry
-            agent_tool = self.registry.get(agent_name)
-            output = agent_tool.call(args, session)
-
-            # Save to session memory
-            session.add_event(agent_name, output)
-
-            # End trace
-            TRACE.end(span, output)
-
+            session.append_event(agent_name, output)
             results[step["step"]] = output
 
-        # Judge evaluation on trajectory
-        score = self.judge.evaluate(mission_text, TRACE.export())
+        score = self.judge.evaluate(mission, session.trace)
 
-        # Self-evolution logic
-        if score < 0.80:
-            print("⚠️ Low score detected — evolving system...")
-            new_agent = self.creator.generate_new_agent("analytics")
-            self.registry.register(new_agent)
+        # Self-improvement: create a new agent if score is low
+        if score < 0.75:
+            spec, new_agent = self.creator.generate_new_agent("analytics")
+            self.registry.register(spec["name"], new_agent, spec.get("description", ""))
 
         return {
-            "mission": mission_text,
+            "mission": mission,
             "results": results,
             "score": score,
-            "trace": TRACE.export(),
-            "session_id": session.id
+            "session_id": session.id,
+            "trace": session.trace,
         }

@@ -1,10 +1,7 @@
-fastapi
-uvicorn
-pydantic
-langchain
+google-generativeai
+python-dotenv
 rich
-pytest
-opentelemetry-sdk
-opentelemetry-exporter-console
 numpy
 pandas
+pytest
+matplotlib

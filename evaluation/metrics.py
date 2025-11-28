@@ -1,37 +1,44 @@
 """
-metrics.py
+metrics.py — Evaluation metrics for Aegis.
 
-Provides quantitative metrics for evaluating agent performance.
-Used in:
-- run_eval.py
-- Kaggle evaluation notebook
+Includes:
+- Aggregate score metrics
+- Minimum/maximum statistics
+- Regression detection
 """
 
+from typing import List, Dict
 import numpy as np
-import pandas as pd
 
-def compute_metrics(results):
+def compute_summary_metrics(rows: List[Dict]):
     """
-    results = list of dict:
-    {
-        "mission": str,
-        "overall_score": float,
-        "helpfulness": float,
-        "accuracy": float,
-        "completeness": float,
-        "safety": float
-    }
+    rows = [
+        {"mission": "...", "score": 0.85, "spans": 3},
+        ...
+    ]
     """
-    df = pd.DataFrame(results)
+    scores = [r["score"] for r in rows]
 
-    metrics = {
-        "missions_evaluated": len(df),
-        "mean_overall_score": df["overall_score"].mean(),
-        "min_overall_score": df["overall_score"].min(),
-        "max_overall_score": df["overall_score"].max(),
-        "mean_helpfulness": df["helpfulness"].mean(),
-        "mean_accuracy": df["accuracy"].mean(),
-        "mean_completeness": df["completeness"].mean(),
-        "mean_safety": df["safety"].mean()
+    summary = {
+        "mean_score": float(np.mean(scores)),
+        "median_score": float(np.median(scores)),
+        "min_score": float(np.min(scores)),
+        "max_score": float(np.max(scores)),
+        "missions_evaluated": len(rows),
+        "scores": scores
     }
-    return metrics, df
+
+    return summary
+
+
+def detect_regression(summary: Dict, threshold: float = 0.75):
+    """
+    Detects whether mean performance falls below threshold.
+
+    Returns: (bool, message)
+    """
+    mean_score = summary["mean_score"]
+
+    if mean_score < threshold:
+        return (True, f"Regression detected: mean score {mean_score:.2f} < {threshold}")
+    return (False, f"No regression: mean score {mean_score:.2f} ≥ {threshold}")

@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "mission": "Create a landing page for a new smartwatch for students",
+    "expected": "Landing page, copy, research"
+  },
+  {
+    "id": 2,
+    "mission": "Make a campaign for a fitness app in India",
+    "expected": "Research + copy + deployment"
+  },
+  {
+    "id": 3,
+    "mission": "Summarize competitors for a new food delivery startup",
+    "expected": "Competitor insights"
+  },
+  {
+    "id": 4,
+    "mission": "Plan a 2-day hackathon promotion targeting university students",
+    "expected": "Campaign plan, channels, copy"
+  },
+  {
+    "id": 5,
+    "mission": "Generate a content calendar for Product X for next month",
+    "expected": "Calendar + topics"
+  }
+]

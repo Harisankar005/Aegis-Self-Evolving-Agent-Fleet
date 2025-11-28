@@ -1,59 +1,67 @@
 """
-run_eval.py
+run_eval.py — CLI evaluation tool for Aegis.
 
-Runs bulk evaluation over the Golden Dataset using the Aegis
-multi-agent orchestrator and LLM-as-Judge system.
-
-Used by:
-- GitHub Actions (ci/premerge-eval.yml)
-- Local evaluation
+Usage:
+    python evaluation/run_eval.py --gold evaluation/golden_dataset.json
 """
 
 import json
 import argparse
-from services.evaluation.judge import Judge
-from services.evaluation.metrics import compute_metrics
+from evaluation.judge import Judge
+from evaluation.metrics import compute_summary_metrics, detect_regression
 
-# Import orchestrator from core project
+# Import orchestrator (update path according to your repo structure)
 from services.orchestrator.orchestrator import Orchestrator
 
-def main(golden_path: str):
-    # Load dataset
-    with open(golden_path) as f:
+
+def run_evaluation(golden_path: str):
+    # Load golden dataset
+    with open(golden_path, "r") as f:
         golden = json.load(f)
 
     orchestrator = Orchestrator()
-    judge = Judge(use_mock=True)
+    judge = Judge()
 
-    all_results = []
+    rows = []
 
     for item in golden:
         mission = item["mission"]
-        expected = item.get("expected", "")
 
-        out = orchestrator.run_mission(mission)
-        trace = out["trace"]
+        # Run mission through orchestrator
+        output = orchestrator.run_mission(mission)
+        score = output["score"]
 
-        scores = judge.evaluate(mission, trace, expected)
-
-        all_results.append({
+        rows.append({
             "mission": mission,
-            **scores
+            "score": score,
+            "spans": len(output["trace"])
         })
 
-    metrics, df = compute_metrics(all_results)
+        print(f"Mission: {mission}")
+        print(f"Score: {score}")
+        print("-" * 50)
 
-    print("\n=== Evaluation Summary ===")
-    for k, v in metrics.items():
-        print(f"{k}: {v}")
+    # Compute summary
+    summary = compute_summary_metrics(rows)
+    print("\n=== SUMMARY ===")
+    print(json.dumps(summary, indent=2))
 
-    # Save raw results
-    df.to_csv("evaluation_results.csv", index=False)
-    print("\nSaved evaluation_results.csv")
+    # Regression detection
+    regressed, message = detect_regression(summary)
+    print("\n=== REGRESSION CHECK ===")
+    print(message)
+
+    # Save results
+    with open("eval_results.json", "w") as f:
+        json.dump({"rows": rows, "summary": summary}, f, indent=2)
+
+    print("\nSaved results → eval_results.json")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--golden", type=str, required=True,
-        help="Path to golden_dataset.json")
+    parser.add_argument("--gold", type=str, required=True,
+                        help="Path to golden_dataset.json")
     args = parser.parse_args()
-    main(args.golden)
+
+    run_evaluation(args.gold)

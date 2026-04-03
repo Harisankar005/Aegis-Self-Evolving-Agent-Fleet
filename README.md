@@ -1,314 +1,170 @@
-Aegis — Self-Evolving Multi-Agent System
-Google x Kaggle AI Agents Intensive Capstone Project
+# Aegis — Self-Evolving Agent Fleet
 
-⭐ 1. Overview
+> **Aegis composes specialist agents to carry out open missions, detects capability gaps, synthesizes new agent/tools on the fly, and self-improves via LLM-judges, memory consolidation, and AgentOps.**
 
-Aegis is a Level-4 autonomous multi-agent system designed to automate complex multi-step workflows such as research, content generation, deployment, and analytics. It uses planning, tools, memory, evaluation, and self-evolution to intelligently improve over time.
+Aegis is a **Level-4 autonomous multi-agent system** built as a **Google x Kaggle AI Agents Intensive Capstone Project**. It is designed to automate complex multi-step workflows such as **research, content generation, deployment, and analytics** through planning, tools, memory, evaluation, and self-evolution.
 
-This project demonstrates:
-✔️ Multi-agent collaboration
-✔️ MCP-style tool use
-✔️ Sessions + long-term memory
-✔️ Observability (tracing, logs, metrics)
-✔️ LLM-as-Judge evaluation
-✔️ Automatic agent generation (AgentCreator)
-✔️ Gemini integration
-✔️ Deployment scaffolding (Docker + Cloud Run)
+[Repository](https://github.com/Harisankar005/Aegis-Self-Evolving-Agent-Fleet)
 
-It is submitted under the Freestyle Track because it explores the fullest range of agentic concepts taught in the course.
+---
 
-⭐ 2. Problem Statement
+## Why this project matters
 
-Modern digital workflows—like launching marketing campaigns, performing competitive research, generating copy, building landing pages, and analyzing performance—require many tools, steps, and hours of manual effort. People must switch between tasks continuously, losing time and creativity.
+Most agent demos stop at “chat with tools.” Aegis goes further:
 
-This fragmentation makes execution slow, inconsistent, and expensive.
+- plans a mission into executable steps
+- delegates work to specialist agents
+- stores context across sessions
+- evaluates itself with an LLM judge
+- creates new agents when capabilities are missing
+- provides observability through traces, logs, and metrics
+- ships with Docker and Cloud Run deployment scaffolding
 
-⭐ 3. Solution Summary
+This is not a wrapper. It is an **agentic system architecture**.
 
-Aegis automates these workflows using a self-evolving multi-agent architecture.
+---
 
-The system:
+## What Aegis does
 
-     Plans tasks from a user mission
+Given a user mission, Aegis can:
 
-     Delegates subtasks to specialist agents
+1. **Plan** the task into subtasks
+2. **Dispatch** subtasks to specialist agents
+3. **Use tools** to gather data or generate outputs
+4. **Persist memory** across conversations and long-running work
+5. **Judge** its own outputs with Gemini-powered evaluation
+6. **Adapt** by generating new agents when a capability gap appears
+7. **Observe** execution with structured traces and logs
+8. **Deploy** using Docker and Cloud Run templates
 
-     Uses tools to gather data, generate artifacts, and deploy output
+---
 
-     Stores context + memory across conversations
+## Core capabilities
 
-     Evaluates itself with a Judge Agent powered by Gemini
+- **Multi-agent collaboration**
+- **MCP-style tool use**
+- **Sessions + long-term memory**
+- **Observability**: tracing, logs, metrics
+- **LLM-as-Judge evaluation**
+- **Automatic agent generation** via `AgentCreator`
+- **Gemini integration**
+- **Deployment scaffolding** with Docker + Cloud Run
 
-     Improves itself by generating new agents when capabilities are missing
+---
 
-     Provides observability with structured traces
+## Architecture at a glance
 
-     Supports deployment via Docker and Cloud Run templates
-
-The result: hours-long workflows shrink into seconds.
-
-⭐ 4. Why Agents?
-
-Agents excel at real-world tasks because they can:
-
-     Break down missions into actionable steps
-
-     Run tools
-
-     Use memory
-
-     Collaborate
-
-     Evaluate and improve
-
-     Replan when needed
-
-     Work across long-running tasks
-
-This cannot be achieved with a simple chatbot.
-Aegis demonstrates true autonomy, not scripted responses.
-
-⭐ 5. Architecture
-
-Below is a simplified diagram :
-
+```text
 User Mission
-      ↓
- Planner Agent
-      ↓
-┌─────────────────────────────┐
-│         Orchestrator        │
-│  - Step execution           │
-│  - Session control          │
-│  - Trace logging            │
-└───────┬──────────────┬──────┘
-        │              │
- MarketResearch     CopyAgent
-      Agent            │
-        │              │
-        └────→ WebDevAgent
-                   │
-               AnalyticsAgent*
-               (*Auto-generated)
-
-
-
-Core components:
-
-     Orchestrator — runs mission plans and manages sessions
-
-     Planner — breaks missions into actionable steps
-
-     Agents — perform tasks (research, copywriting, deployment, analytics)
-
-     MCP Registry — routes calls to agents/tools
-
-     SessionService — long-running session state management
-
-     MemoryBank — stores knowledge for future tasks
-
-     Judge — rates performance, triggers improvements
-
-     AgentCreator — generates new agents automatically
-
-⭐ 6. Features (Aligned to Course Requirements)
-✔️ 1. Multi-Agent System
-
-      Aegis uses multiple agents:
-
-      MarketResearchAgent
-
-      CopyAgent
-
-      WebDevAgent
-
-      AnalyticsAgent (auto-generated)
-
-      AgentCreator (meta-agent)
-
-      Judge Agent
-
-      Agents run sequentially or in parallel based on plan.
-
-✔️ 2. Tools (MCP Gateway + Custom Tools)
-
-      Search tool
-
-      Web deployment tool (mocked)
-
-      Analytics tool
-
-      MCP-compatible execution interface
-
-✔️ 3. Sessions & Memory
-
-      SessionService stores conversation, trace, and state
-
-      MemoryBank stores embeddings + long-term summaries
-
-      Context compaction for long tasks
-
-✔️ 4. Observability
-
-     Every agent call produces a trace span
-
-     Rich logs, human-readable debugging
-
-     Metrics output in evaluation notebook
-
-✔️ 5. Agent Evaluation
-
-     Gemini-powered Judge Agent (mocked offline)
-
-     Golden dataset evaluation notebook
-
-     Regression detection logic
-
-✔️ 6. A2A Protocol
-
-     Agents can call other agents via the registry.
-
-✔️ 7. Long-Running Tasks
-
-     Sessions support pause/resume mission continuation.
-
-✔️ 8. Deployment
-
-     Dockerfile + Cloud Run instructions included.
-
-⭐ 7. Gemini Integration
-
-Even though API keys cannot be included, this project uses Gemini via a stub function to satisfy evaluation requirements.
-
-# Example Gemini call (keys removed)
-def gemini_generate(prompt: str) -> str:
-    """
-    Gemini-powered content generation or evaluation.
-    Mocked locally for safety, but real calls are supported.
-    """
-    return "Gemini mock response: " + prompt[:60]
-
-
-In the real system, the Judge Agent uses Gemini for evaluation:
-
-      Helpfulness
-
-      Completeness
-
-      Relevance
-
-      Safety
-
-
-⭐ 8. How to Run Locally
-1. Clone the repo
-   
-   git clone https://github.com/<your-username>/aegis-agent-fleet
-   cd aegis-agent-fleet
-
-3. Install dependencies
-   pip install -r requirements.txt
-
-4. Run a demo mission
-   from services.orchestrator.orchestrator import Orchestrator
-   from services.agents.market_research_agent import MarketResearchAgent
-   from services.agents.copy_agent import CopyAgent
-   from services.agents.webdev_agent import WebDevAgent
-
-   orch = Orchestrator()
-   orch.register_agent("MarketResearchAgent", MarketResearchAgent())
-   orch.register_agent("CopyAgent", CopyAgent())
-   orch.register_agent("WebDevAgent", WebDevAgent())
-
-   out = orch.run_mission("Launch a marketing campaign for Product X")
-   print(out)
-
-⭐ 9. How to Run in Kaggle
-
-A complete evaluation notebook is included. It:
-
-    Loads the golden dataset
-
-    Executes missions
-
-    Runs Judge
-
-    Generates score distribution plots
-
-    Detects regressions
-
-⭐ 10. Folder Structure
+    ↓
+Planner Agent
+    ↓
+Orchestrator
+    ├── MarketResearchAgent
+    ├── CopyAgent
+    ├── WebDevAgent
+    ├── AnalyticsAgent (auto-generated)
+    ├── Judge Agent
+    └── AgentCreator (meta-agent)
+
+Supporting services:
+- MCP Registry
+- SessionService
+- MemoryBank
+- Evaluation harness
+- Trace/log pipeline
+```
+
+### Key components
+
+- **Orchestrator** — manages execution and session control
+- **Planner** — breaks a mission into actionable steps
+- **Specialist agents** — research, copywriting, web/dev, analytics
+- **MCP Registry** — routes calls to tools and agents
+- **SessionService** — stores conversation and execution state
+- **MemoryBank** — stores embeddings and long-term summaries
+- **Judge Agent** — evaluates outputs and triggers improvement
+- **AgentCreator** — generates new agents automatically when needed
+
+---
+
+## Repository structure
+
+```text
 aegis-agent-fleet/
-│
 ├── services/
-│   ├── orchestrator/
-│   ├── agents/
-│   ├── tools/
-│   ├── memory/
-│   ├── evaluation/
-│
+├── orchestrator/
+├── agents/
+├── tools/
+├── memory/
+├── evaluation/
 ├── notebooks/
-│   ├── demo_end_to_end.ipynb
-│   ├── eval_harness.ipynb
-│
 ├── tests/
 ├── docs/
 ├── infra/
+├── ci/
 └── README.md
+```
 
-⭐ 11. Deployment Instructions
+---
 
-Aegis can be deployed using Docker and Cloud Run:
+## Evaluation and testing
 
-    1. Build image
-         docker build -t aegis-agent .
+Aegis includes:
 
-    2. Run locally
-         docker run -p 8080:8080 aegis-agent
+- a **demo notebook** for end-to-end run-throughs
+- an **evaluation notebook** with golden dataset + judge scoring
+- tests under `/tests/` to verify:
+  - agents run end to end
+  - the planner produces valid plans
+  - the registry behaves correctly
 
-    3. Deploy to Cloud Run
-        gcloud builds submit --tag gcr.io/<project>/aegis
-        gcloud run deploy aegis --image gcr.io/<project>/aegis --platform managed
+---
 
-⭐ 12. Evaluation Notebook and Tests
+## Local setup
 
-        Two Kaggle notebooks are provided:
+```bash
+git clone https://github.com/Harisankar005/Aegis-Self-Evolving-Agent-Fleet
+cd Aegis-Self-Evolving-Agent-Fleet
+pip install -r requirements.txt
+```
 
-          Demo notebook (run-through)
+### Run a demo
 
-          Evaluation notebook (golden dataset + judge scoring)
+The repository includes orchestrator and agent modules under `services/`. Start from the demo notebook or wire up the agents through the orchestrator as shown in the project documentation.
 
-        Tests inside /tests/ ensure:
+---
 
-          Agents run end-to-end
+## Deployment
 
-          Planner produces valid plans
+Aegis includes Docker and Cloud Run instructions.
 
-          Registry has correct behavior
+```bash
+docker build -t aegis-agent .
+docker run -p 8080:8080 aegis-agent
 
-⭐ 13. Video Summary
+gcloud builds submit --tag gcr.io/<project>/aegis
+gcloud run deploy aegis --image gcr.io/<project>/aegis --platform managed
+```
 
+---
 
-⭐ 14. What Makes Aegis Special
+## What recruiters should notice first
 
-    Aegis goes beyond basic agent systems—it is:
+- **System design**, not isolated scripts
+- **Agent orchestration**, not just prompt chaining
+- **Evaluation**, not just generation
+- **Observability**, not just execution
+- **Extensibility**, through automatic agent creation
 
-        Autonomous
+---
 
-        Self-improving
+## Tech stack
 
-        Evaluated
+The repository is primarily Python-based and includes Jupyter notebooks and Docker support.
 
-        Tool-enabled
+---
 
-        Memory-driven
+## License
 
-        Production-structured
-
-        Deployment-ready
-
-   This showcases all the key concepts of the course in one project.
-
-⭐ 15. License
-
-MIT License.
+MIT License

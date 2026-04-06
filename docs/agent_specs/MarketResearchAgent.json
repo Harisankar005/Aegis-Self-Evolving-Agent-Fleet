@@ -1,0 +1,40 @@
+{
+  "name": "MarketResearchAgent",
+  "version": "1.0.0",
+  "description": "Analyzes a given product, market segment or topic and produces summarized competitive insights, audience analysis and opportunity areas.",
+  "capabilities": [
+    "market research",
+    "competitive analysis",
+    "audience understanding",
+    "structured insight generation"
+  ],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Product, service, or topic to analyze"
+      }
+    },
+    "required": ["query"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "insights": { "type": "string" },
+      "confidence": { "type": "number" }
+    }
+  },
+  "examples": {
+    "input": { "query": "Marketing analytics tools for small businesses" },
+    "output": {
+      "insights": "Market dominated by 5 major players... opportunities in real-time dashboards...",
+      "confidence": 0.87
+    }
+  },
+  "metadata": {
+    "author": "Aegis System",
+    "created_at": "2025-11-01",
+    "tags": ["research", "analysis", "planning"]
+  }
+}

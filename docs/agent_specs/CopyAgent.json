@@ -1,0 +1,40 @@
+{
+  "name": "CopyAgent",
+  "version": "1.0.0",
+  "description": "Generates marketing copy including headlines, taglines, body text, short-form content, and tone-adapted messaging.",
+  "capabilities": [
+    "copywriting",
+    "tone adaptation",
+    "creative content generation",
+    "prompt-to-copy transformation"
+  ],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "brief": {
+        "type": "string",
+        "description": "Marketing brief, context, or description of the desired copy"
+      }
+    },
+    "required": ["brief"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "copy": { "type": "string" },
+      "confidence": { "type": "number" }
+    }
+  },
+  "examples": {
+    "input": { "brief": "Advertise an IoT smartwatch for engineering students" },
+    "output": {
+      "copy": "Meet the SmartEdge Watch — engineered for innovators. Track, build, and stay ahead.",
+      "confidence": 0.93
+    }
+  },
+  "metadata": {
+    "author": "Aegis System",
+    "created_at": "2025-11-01",
+    "tags": ["copywriting", "content", "marketing"]
+  }
+}

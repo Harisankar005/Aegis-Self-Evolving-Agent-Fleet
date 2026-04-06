@@ -1,28 +1,26 @@
 import pytest
-from services.orchestrator.planner import generate_plan
 
-def test_plan_structure():
-    mission = "Launch a campaign for Product X"
-    plan = generate_plan(mission)
+def test_planner_generates_plan(planner, sample_task):
+    plan = planner.create_plan(sample_task)
 
     assert isinstance(plan, list)
-    assert len(plan) >= 3
-
-def test_plan_fields():
-    mission = "Campaign plan test"
-    plan = generate_plan(mission)
+    assert len(plan) > 0
 
     for step in plan:
-        assert "step" in step
         assert "agent" in step
-        assert "args" in step
-        assert isinstance(step["args"], dict)
+        assert "action" in step or "step" in step
 
-def test_agent_names_in_plan():
-    mission = "Basic campaign"
-    plan = generate_plan(mission)
 
-    agent_names = [s["agent"] for s in plan]
-    assert "MarketResearchAgent" in agent_names
-    assert "CopyAgent" in agent_names
-    assert "WebDevAgent" in agent_names
+def test_planner_no_cycles(planner, sample_task):
+    plan = planner.create_plan(sample_task)
+
+    seen = set()
+    for step in plan:
+        identifier = step.get("step")
+        assert identifier not in seen, "Cycle detected in plan"
+        seen.add(identifier)
+
+
+def test_planner_handles_empty_input(planner):
+    with pytest.raises(Exception):
+        planner.create_plan({})

@@ -52,7 +52,7 @@ class MemoryConsolidation:
     ]
     """
 
-    def __init__(self, relevance_threshold: float = 0.2):
+    def __init__(self, relevance_threshold: float = 0.1):
         self.relevance_threshold = relevance_threshold
 
     # ------------------------------------------------------------------ #
